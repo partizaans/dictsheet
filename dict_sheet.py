@@ -8,8 +8,17 @@ from Row import Row
 
 
 class Dict_Sheet (object):
+    def gen_alphabet_list():
+        alphabet_list = []
+        less26 = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        for s in less26:
+            alphabet_list.append(s)
+        for i in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+            for j in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+                alphabet_list.append("%s%s" % (i, j))
+        return alphabet_list 
+    alphabet_list = gen_alphabet_list()
 
-    alphabet_list = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     def __init__(self, wks, mapping=None):
         self.wks = wks
         """
@@ -101,7 +110,7 @@ class Dict_Sheet (object):
     def _get_row_cells(self, idx):
         #width = Dict_Sheet.alphabet_list[self._width]
         range_str = 'A%s:%s%s' % (str(idx), Dict_Sheet.alphabet_list[self._width], str(idx))
-        print range_str
+        #print range_str
         row_cells = self.wks.range(range_str)
         return row_cells
 
@@ -151,6 +160,7 @@ class Dict_Sheet (object):
             self.__dict__[self.__len__] = row
         except Exception as e:
             raise RuntimeError('append fails')
+        return row
 
     def __repr__(self):
         _ = copy.deepcopy(self.__dict__)

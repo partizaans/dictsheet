@@ -31,7 +31,7 @@ class Dict_Sheet (object):
 
         #self._mapping =  _mapping
         self.keys = self.mapping
-        self._update_row_mapping()
+        #self._update_row_mapping()
 
     def _get_kc_map(self):
         mapping = {}

@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append('..')
+sys.path.insert(0, '.')
 import pytest
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -9,7 +12,8 @@ import test_config
 import uuid 
 import random
 
-
+if sys.version_info.major >=3:
+    unicode = str
 wks_name = unicode(uuid.uuid4())
 
 @pytest.fixture(scope='session')
@@ -35,7 +39,6 @@ def wks(request, sh):
         pp(sh.worksheets())
         print("\n %s: %s" % (wks_name, len(sh.worksheets())))
     request.addfinalizer(wks_teardown)
-    print "wks !!!!!!!!!"
     return wks
 
 
@@ -93,7 +96,6 @@ class Test_Dict_Sheet(object):
         pp(dict_wks)
         pp(wks.get_all_values())
         for idx, row in enumerate(dict_wks):
-            print "!!!"
             assert idx == idx
             pp(row)
     """

@@ -6,7 +6,7 @@ import pytest
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from pprintpp import pprint as pp
-from dict_sheet import Dict_Sheet
+from dictsheet import DictSheet
 import copy
 import test_config
 import uuid 
@@ -21,7 +21,7 @@ def sh():
     scope = ['https://spreadsheets.google.com/feeds']
     credentials = ServiceAccountCredentials.from_json_keyfile_name(test_config.CREDENTIAL_FILE, scope)
     #credentials = ServiceAccountCredentials.from_json_keyfile_name('facebook-shop-cart-acdb9ee1b37e.json', scope)
-    #sheet_name = u"Dict_Sheet.test"
+    #sheet_name = u"DictSheet.test"
     sheet_name = test_config.SHEET_NAME
     gc = gspread.authorize(credentials)
     sh = gc.open(sheet_name)
@@ -42,7 +42,7 @@ def wks(request, sh):
     return wks
 
 
-class Test_Dict_Sheet(object):
+class Test_DictSheet(object):
     
     
 
@@ -52,7 +52,7 @@ class Test_Dict_Sheet(object):
 
     @pytest.fixture(scope="session")
     def dict_wks(self, wks, mapping):
-        dict_wks = Dict_Sheet(wks=wks, mapping=mapping)
+        dict_wks = DictSheet(wks=wks, mapping=mapping)
         return dict_wks
 
     def test_get_mapping(self, dict_wks, mapping):

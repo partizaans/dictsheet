@@ -1,28 +1,43 @@
 # -*- coding: utf-8 -*-
 import sys
-sys.path.append('..')
-sys.path.insert(0, '.')
 import pytest
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 from pprintpp import pprint as pp
-from dictsheet import DictSheet
+#from dictsheet import DictSheet
+#from dictsheet import  DictSheet
+import dictsheet
 import copy
-import test_config
+#import test_config
 import uuid 
 import random
+import os 
 
 if sys.version_info.major >=3:
+    import configparser as ConfigParser
     unicode = str
+else:
+    import ConfigParser
+
 wks_name = unicode(uuid.uuid4())
+
+def read_config(filename):
+    config = ConfigParser.ConfigParser()
+    config.readfp(open(filename))
+    return config
 
 @pytest.fixture(scope='session')
 def sh():
+    CONFIG_FILENAME = os.path.join(os.path.dirname(__file__), 'tests.config')
+    config = read_config(CONFIG_FILENAME)
+    SHEET_NAME = config.get('Settings', 'SHEET_NAME')
+    CREDS_FILENAME = config.get('Settings', 'CREDENTIAL_FILE')
+
     scope = ['https://spreadsheets.google.com/feeds']
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(test_config.CREDENTIAL_FILE, scope)
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(CREDS_FILENAME, scope)
     #credentials = ServiceAccountCredentials.from_json_keyfile_name('facebook-shop-cart-acdb9ee1b37e.json', scope)
     #sheet_name = u"DictSheet.test"
-    sheet_name = test_config.SHEET_NAME
+    sheet_name = SHEET_NAME
     gc = gspread.authorize(credentials)
     sh = gc.open(sheet_name)
     #pp(sh.worksheets())
@@ -43,8 +58,6 @@ def wks(request, sh):
 
 
 class Test_DictSheet(object):
-    
-    
 
     @pytest.fixture(scope="session")
     def mapping(self):
@@ -52,7 +65,7 @@ class Test_DictSheet(object):
 
     @pytest.fixture(scope="session")
     def dict_wks(self, wks, mapping):
-        dict_wks = DictSheet(wks=wks, mapping=mapping)
+        dict_wks = dictsheet.DictSheet(wks=wks, mapping=mapping)
         return dict_wks
 
     def test_get_mapping(self, dict_wks, mapping):

@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import print_function
 from collections import OrderedDict
 from pprintpp import pprint as pp
 import copy
 import json
 from Row import Row
-
 
 class Dict_Sheet (object):
     def gen_alphabet_list():
@@ -134,10 +133,13 @@ class Dict_Sheet (object):
 
     def update(self, data_dict):
         """
-        input: {
-            2: { u'蜂蜜棒腿': 123, ...},
-            3: { u'麻辣豬肋排': 'sss', ...}
-        }
+        input:
+            {idx: {k1: v1, k2:v2, ..}
+            ex:
+            {
+                2: { u'蜂蜜棒腿': 123, ...},
+                3: { u'麻辣豬肋排': 'sss', ...}
+            }
         """
         try:
             for idx, data in data_dict.items():

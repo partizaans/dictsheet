@@ -4,9 +4,9 @@ from collections import OrderedDict
 from pprintpp import pprint as pp
 import copy
 import json
-from Row import Row
+from row import Row
 
-class Dict_Sheet (object):
+class DictSheet (object):
     def gen_alphabet_list():
         alphabet_list = []
         less26 = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -88,8 +88,8 @@ class Dict_Sheet (object):
         if last_col>26:
             last_col = 26
         #pp(last_col)
-        #pp(Dict_Sheet.alphabet_list[last_col])
-        first_row_range = "A1:%s1" % Dict_Sheet.alphabet_list[last_col]
+        #pp(DictSheet.alphabet_list[last_col])
+        first_row_range = "A1:%s1" % DictSheet.alphabet_list[last_col]
         #pp(first_row_range)
         cells = self.wks.range(first_row_range)
         #cells = self.wks.range("A1:Z1")
@@ -107,8 +107,8 @@ class Dict_Sheet (object):
         return _mapping
 
     def _get_row_cells(self, idx):
-        #width = Dict_Sheet.alphabet_list[self._width]
-        range_str = 'A%s:%s%s' % (str(idx), Dict_Sheet.alphabet_list[self._width], str(idx))
+        #width = DictSheet.alphabet_list[self._width]
+        range_str = 'A%s:%s%s' % (str(idx), DictSheet.alphabet_list[self._width], str(idx))
         #print range_str
         row_cells = self.wks.range(range_str)
         return row_cells
@@ -210,7 +210,7 @@ class Dict_Sheet (object):
                     self.append(item)
                 elif type(item) is Row:
                     self.__len__ += 1
-                    range_str = 'A%s:%s%s' % (str(self.__len__), Dict_Sheet.alphabet_list[self._width], str(self.__len__))
+                    range_str = 'A%s:%s%s' % (str(self.__len__), DictSheet.alphabet_list[self._width], str(self.__len__))
                     row_list = self.wks.range(range_str)
                     row = Row(wks=self.wks, row_cells=row_list)
                     row.update(item.kv())

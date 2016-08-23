@@ -4,7 +4,7 @@ from collections import OrderedDict
 from pprintpp import pprint as pp
 import copy
 import json
-from row import Row
+from .row import Row
 
 class DictSheet (object):
     def gen_alphabet_list():

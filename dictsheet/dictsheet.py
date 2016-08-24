@@ -1,15 +1,23 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import print_function
 from collections import OrderedDict
 from pprintpp import pprint as pp
 import copy
 import json
-from Row import Row
+from .row import Row
 
+class DictSheet (object):
+    def gen_alphabet_list():
+        alphabet_list = []
+        less26 = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        for s in less26:
+            alphabet_list.append(s)
+        for i in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+            for j in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+                alphabet_list.append("%s%s" % (i, j))
+        return alphabet_list 
+    alphabet_list = gen_alphabet_list()
 
-class Dict_Sheet (object):
-
-    alphabet_list = " ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     def __init__(self, wks, mapping=None):
         self.wks = wks
         """
@@ -80,8 +88,8 @@ class Dict_Sheet (object):
         if last_col>26:
             last_col = 26
         #pp(last_col)
-        #pp(Dict_Sheet.alphabet_list[last_col])
-        first_row_range = "A1:%s1" % Dict_Sheet.alphabet_list[last_col]
+        #pp(DictSheet.alphabet_list[last_col])
+        first_row_range = "A1:%s1" % DictSheet.alphabet_list[last_col]
         #pp(first_row_range)
         cells = self.wks.range(first_row_range)
         #cells = self.wks.range("A1:Z1")
@@ -99,9 +107,9 @@ class Dict_Sheet (object):
         return _mapping
 
     def _get_row_cells(self, idx):
-        #width = Dict_Sheet.alphabet_list[self._width]
-        range_str = 'A%s:%s%s' % (str(idx), Dict_Sheet.alphabet_list[self._width], str(idx))
-        print range_str
+        #width = DictSheet.alphabet_list[self._width]
+        range_str = 'A%s:%s%s' % (str(idx), DictSheet.alphabet_list[self._width], str(idx))
+        #print range_str
         row_cells = self.wks.range(range_str)
         return row_cells
 
@@ -125,10 +133,13 @@ class Dict_Sheet (object):
 
     def update(self, data_dict):
         """
-        input: {
-            2: { u'蜂蜜棒腿': 123, ...},
-            3: { u'麻辣豬肋排': 'sss', ...}
-        }
+        input:
+            {idx: {k1: v1, k2:v2, ..}
+            ex:
+            {
+                2: { u'蜂蜜棒腿': 123, ...},
+                3: { u'麻辣豬肋排': 'sss', ...}
+            }
         """
         try:
             for idx, data in data_dict.items():
@@ -151,6 +162,7 @@ class Dict_Sheet (object):
             self.__dict__[self.__len__] = row
         except Exception as e:
             raise RuntimeError('append fails')
+        return row
 
     def __repr__(self):
         _ = copy.deepcopy(self.__dict__)
@@ -198,7 +210,7 @@ class Dict_Sheet (object):
                     self.append(item)
                 elif type(item) is Row:
                     self.__len__ += 1
-                    range_str = 'A%s:%s%s' % (str(self.__len__), Dict_Sheet.alphabet_list[self._width], str(self.__len__))
+                    range_str = 'A%s:%s%s' % (str(self.__len__), DictSheet.alphabet_list[self._width], str(self.__len__))
                     row_list = self.wks.range(range_str)
                     row = Row(wks=self.wks, row_cells=row_list)
                     row.update(item.kv())

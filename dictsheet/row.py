@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+from __future__ import print_function
 from collections import OrderedDict
 from pprintpp import pprint as pp
 import copy
@@ -85,6 +85,8 @@ class Row(object):
             return key in self.__dict__
 
     def __getitem__(self, key):
+        if key not in self.__dict__:
+            print("%s is not in row" % key.encode('utf-8'))
         return self.__dict__[key]
 
     def __repr__(self):

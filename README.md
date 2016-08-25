@@ -1,23 +1,31 @@
 # Dictsheet - Easy to use Google Spreadsheets Python API
 
-Manage your spreadsheets with dictsheet in Python. A easy to use Google spreadsheets Python API. Manage information in the sheet in rows. Based on gspread
+Manage your spreadsheets in dict way. A easy to use Google spreadsheets Python API. Manage information in the sheet in rows. Based on gspread
 
 Features:
-* Open a Google Spreadsheet with title and google credentials.
-* Mange the spreadsheet row by row.
-* Get/set sheet mapping.
-* Append a row.
+* Manage the spreadsheet in dict way 
+* Get/Set sheet mapping
 * Update a row or element(s) in a row.
-* Iterate rows in a spread sheet.
+* Iterate rows in a spreadsheet.
+
+## Requirements
+Python 2.6+ or Python 3+, gspread
+
+## Install
+
+```sh
+pip install dictsheet
+```
 
 ## Basic Usage
+
 1. [Obtain OAuth2 credentials from Google Developers Console](http://gspread.readthedocs.org/en/latest/oauth2.html)
 2. Obtain the sheet title.
 3. Start using dictsheet:
 ```python
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-from dict_sheet import Dict_Sheet
+from dictsheet import DictSheet
 
 # The Credential file obtained from Google
 CREDENTIAL_FILE = 'My Projecthah-xxxxxxx.json'
@@ -31,12 +39,14 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name(CREDENTIAL_FILE, 
 gc = gspread.authorize(credentials)
 sh = gc.open(SHEET_NAME)
 wks = sh.get_worksheet(0)
+
+
 # Initialize dictsheet
-dict_wks = Dict_Sheet(wks=wks)
+dict_wks = DictSheet(wks=wks)
 
 # Basic usage
 # Get mapping
-print dict_wks.mapping
+print dick_wks.mapping
 
 # Set mapping
 map = {"name":1, "phone":2, "address":3}
@@ -56,17 +66,8 @@ for idx, dict_data in dict_wks.items():
 dict_wks[4].clear()
 ```
 
-## Installation
 
-### Requirements
 
-Python 2.6+ or Python 3+, gspread
-
-### From PyPI
-
-```sh
-pip install dictsheet
-```
 ## Contributors
 
 Chandler Huang, Xander Li

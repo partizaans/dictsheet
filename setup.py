@@ -2,7 +2,7 @@ from pip._internal.req import parse_requirements
 from setuptools import setup, find_packages
 
 install_reqs = parse_requirements('requirements.txt', session=False)
-reqs = [str(ir.req) for ir in install_reqs]
+reqs = [str(ir.requirement) for ir in install_reqs]
 # REFERENCE:
 # http://stackoverflow.com/questions/14399534/how-can-i-reference-requirements-txt-for-the-install-requires-kwarg-in-setuptool
 

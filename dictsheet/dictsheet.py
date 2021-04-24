@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from pprintpp import pprint as pp
 import copy
 import json
@@ -15,7 +15,7 @@ class DictSheet (object):
         for i in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
             for j in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
                 alphabet_list.append("%s%s" % (i, j))
-        return alphabet_list 
+        return alphabet_list
     alphabet_list = gen_alphabet_list()
 
     def __init__(self, wks, mapping=None):
@@ -56,17 +56,17 @@ class DictSheet (object):
     @mapping.setter
     def mapping(self, mapping):
         """
-        input: 
-            wks from gspread 
+        input:
+            wks from gspread
             mapping: {
                 'col_1': 1,
                 'col_2': 2,
                 ...
-            } or 
+            } or
             mapping: [
                 'col_1', 'col_2', '', 'col_3'
             ]
-        output: dict of key, col mapping 
+        output: dict of key, col mapping
                 ex: { id: 1, name: 2, ... }
         """
         if '_mapping' not in self.__dict__:
@@ -82,8 +82,8 @@ class DictSheet (object):
             _mapping  = mapping
 
         self._mapping = _mapping
-        # TO-DO upadte first rows in sheet 
-        
+        # TO-DO upadte first rows in sheet
+
         last_col = len(self.wks.row_values(1))
         if last_col>26:
             last_col = 26
@@ -107,11 +107,18 @@ class DictSheet (object):
         return _mapping
 
     def _get_row_cells(self, idx):
-        #width = DictSheet.alphabet_list[self._width]
         range_str = 'A%s:%s%s' % (str(idx), DictSheet.alphabet_list[self._width], str(idx))
-        #print range_str
         row_cells = self.wks.range(range_str)
         return row_cells
+
+    def _get_all_rows_cells(self):
+        range_str = 'A2:%s%s' % (DictSheet.alphabet_list[self._width], str(self.wks.row_count))
+        cells = self.wks.range(range_str)
+        result = defaultdict(list)
+        for c in cells:
+            result[c.row].append(c)
+        return result
+
 
     def _update_row_mapping(self):
         """
@@ -122,8 +129,9 @@ class DictSheet (object):
         """
         rows = {}
         Row.kc_map[self._id] = self._mapping
+        all_values = self._get_all_rows_cells()
         for idx in range(2, self.__len__ + 1):
-            row_cells = self._get_row_cells(idx)
+            row_cells = all_values[idx]
             row = Row(wks=self.wks, row_cells=row_cells)
             rows[idx] = row
             self.__dict__[idx] = row
@@ -146,10 +154,10 @@ class DictSheet (object):
                 row_cells = self._get_row_cells(idx)
                 row = Row(wks=self.wks, row_cells=row_cells)
                 row.update(data)
-                self.__dict__[idx] = row 
+                self.__dict__[idx] = row
         except Exception as e:
             return -1
-        return 0 
+        return 0
 
     def append(self, dict_data):
         # TO-DO: append list of dict
@@ -183,7 +191,7 @@ class DictSheet (object):
         if idx >= 2:
             return idx
         elif idx < 0:
-            idx = self.__len__ + idx + 1 
+            idx = self.__len__ + idx + 1
             return idx
         else:
             raise IndexError('getitem', 'idx error')
@@ -204,7 +212,7 @@ class DictSheet (object):
         if type(key) is int:
             idx = self.__idx_convert__(key)
             if idx == 1:
-                raise IndexError('setitem', 'idx shoud not be 1') 
+                raise IndexError('setitem', 'idx shoud not be 1')
             if idx not in self.__dict__: # Insert 
                 if type(item) is dict:
                     self.append(item)

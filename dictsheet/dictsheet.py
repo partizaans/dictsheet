@@ -45,7 +45,7 @@ class DictSheet (object):
         mapping = {}
         col_list = self.wks.row_values(1)
         for idx, value in enumerate(col_list, start=1):
-            if value is not "":
+            if value != "":
                 mapping[value.strip()] = idx
         return mapping
 

@@ -107,7 +107,7 @@ class Row(object):
             update_cells.append(cell)
         self.wks.update_cells(update_cells)
 
-    def update(self, data_dict):
+    def update(self, data_dict, commit=True):
         # data as dict
         """
         input: {
@@ -126,7 +126,9 @@ class Row(object):
                         update_cells.append(cell)
                         self.__dict__[k] = v
                         break
-        self.wks.update_cells(update_cells)
+        if commit:
+            self.wks.update_cells(update_cells)
+        return update_cells
 
     def kv(self):
         _ = {}

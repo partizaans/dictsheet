@@ -111,8 +111,15 @@ class DictSheet (object):
         row_cells = self.wks.range(range_str)
         return row_cells
 
-    def _get_all_rows_cells(self):
-        range_str = 'A2:%s%s' % (DictSheet.alphabet_list[self._width], str(self.wks.row_count))
+    def _get_rows_cells(self, from_idx=None, to_idx=None):
+        from_idx = from_idx or 2
+        to_idx = to_idx or self.wks.row_count
+        range_str = 'A%s:%s%s' % (from_idx, DictSheet.alphabet_list[self._width], to_idx)
+        print('range_str', range_str)
+        print('range_str', range_str)
+        print('range_str', range_str)
+        print('range_str', range_str)
+        print('range_str', range_str)
         cells = self.wks.range(range_str)
         result = defaultdict(list)
         for c in cells:
@@ -129,7 +136,7 @@ class DictSheet (object):
         """
         rows = {}
         Row.kc_map[self._id] = self._mapping
-        all_values = self._get_all_rows_cells()
+        all_values = self._get_rows_cells()
         for idx in range(2, self.__len__ + 1):
             row_cells = all_values[idx]
             row = Row(wks=self.wks, row_cells=row_cells)
@@ -159,15 +166,20 @@ class DictSheet (object):
             return -1
         return 0
 
-    def append(self, dict_data):
-        # TO-DO: append list of dict
-        idx = self.__len__  + 1
+    def append(self, dict_data_list):
+        start_idx = self.__len__ + 1
+        end_idx = start_idx + len(dict_data_list)
+        to_be_updated_cells = []
         try:
-            row_cells = self._get_row_cells(idx=idx)
-            row = Row(wks=self.wks, row_cells=row_cells)
-            row.update(dict_data)
-            self.__len__ = idx
-            self.__dict__[self.__len__] = row
+            rows_cells = self._get_rows_cells(start_idx, end_idx)
+            for i, (idx, row_cells) in enumerate(rows_cells.items()):
+                if i >= len(dict_data_list): break
+                row = Row(wks=self.wks, row_cells=row_cells)
+                to_be_updated_cells += row.update(dict_data_list[i], commit=False)
+                self.__len__ = idx
+                self.__dict__[self.__len__] = row
+            self.wks.update_cells(to_be_updated_cells)
+
         except Exception as e:
             raise RuntimeError('append fails')
         return row
@@ -213,7 +225,7 @@ class DictSheet (object):
             idx = self.__idx_convert__(key)
             if idx == 1:
                 raise IndexError('setitem', 'idx shoud not be 1')
-            if idx not in self.__dict__: # Insert 
+            if idx not in self.__dict__: # Insert
                 if type(item) is dict:
                     self.append(item)
                 elif type(item) is Row:

@@ -151,13 +151,17 @@ class DictSheet (object):
                 3: { u'麻辣豬肋排': 'sss', ...}
             }
         """
+        to_be_updated_cells = []
         try:
+            from_idx, to_idx = min(data_dict.keys()), max(data_dict.keys())
+            rows_cells = self._get_rows_cells(from_idx, to_idx)
             for idx, data in data_dict.items():
-                row_cells = self._get_row_cells(idx)
+                row_cells = rows_cells[idx]
                 row = Row(wks=self.wks, row_cells=row_cells)
-                row.update(data)
+                to_be_updated_cells += row.update(data, commit=False)
                 self.__dict__[idx] = row
-        except Exception as e:
+            self.wks.update_cells(to_be_updated_cells)
+        except Exception:
             return -1
         return 0
 

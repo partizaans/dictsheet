@@ -115,11 +115,6 @@ class DictSheet (object):
         from_idx = from_idx or 2
         to_idx = to_idx or self.wks.row_count
         range_str = 'A%s:%s%s' % (from_idx, DictSheet.alphabet_list[self._width], to_idx)
-        print('range_str', range_str)
-        print('range_str', range_str)
-        print('range_str', range_str)
-        print('range_str', range_str)
-        print('range_str', range_str)
         cells = self.wks.range(range_str)
         result = defaultdict(list)
         for c in cells:

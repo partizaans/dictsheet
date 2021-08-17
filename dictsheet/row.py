@@ -29,10 +29,8 @@ class Row(object):
                 "k2": "v2",..
             }
         """
-        self._id = wks.__dict__['_id']
+        self._id = wks.id
         if self._id not in Row.kc_map:
-            #pp(wks.__dict__['_id'])
-            #Row.kc_map[self._id] = self._id
             raise Exception('Need define key_col_map')
             # TO-DO make sure how it's works
         if self._id not in Row.inv_kc_map:

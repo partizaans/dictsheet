@@ -32,7 +32,7 @@ class DictSheet (object):
         """
 
         self.__len__, self._width = self._get_len_width()
-        self._id = wks._id
+        self._id = wks.id
         if mapping is None:
             mapping = self._get_kc_map()
         self.mapping = mapping
